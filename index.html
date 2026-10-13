@@ -103,6 +103,7 @@ const GROUPS = [
   { key:'PIN', label:'U-stirrups / Pins (PIN)',                               spacing:true,  d:8,  s:200 },
   { key:'CS',  label:'Closed stirrups (CS) at narrow wall strips',            spacing:true,  d:8,  s:150 },
   { key:'ER',  label:'Edge/corner reinforcement (ER)',                        spacing:false, d:12 },
+  { key:'OR',  label:'Opening reinforcement (OR)',                           spacing:false, d:12 },
   { key:'HB',  label:'Hook bars connecting both reinforcement layers (HB)',   spacing:true,  d:8,  s:400 },
 ];
 const SPACING_MIN = 25, SPACING_MAX = 500;
@@ -141,8 +142,7 @@ GROUPS.forEach(g=>{
       <label for="${g.key}_on" style="margin:0;color:inherit;font-size:14px">${g.label}</label></div>
     <div class="row">
       <div><label for="${g.key}_d">Diameter</label><select id="${g.key}_d">${opts}</select></div>
-      ${g.spacing?`<div><label for="${g.key}_s">Spacing (mm)</label><input id="${g.key}_s" type="number" step="any" min="${SPACING_MIN}" max="${SPACING_MAX}"><div class="err" data-err="${g.key}_s"></div></div>`:''}
-    </div>`;
+      ${g.spacing?`<div><label for="${g.key}_s">Spacing (mm)</label><input id="${g.key}_s" type="number" step="any" min="${SPACING_MIN}" max="${SPACING_MAX}"><div class="err" data-err="${g.key}_s"></div></div>`:''}    </div>`;
   groupsEl.appendChild(div);
   $(g.key+'_on').addEventListener('change',()=>syncGroup(g));
 });
@@ -150,15 +150,13 @@ function syncGroup(g){
   const on = $(g.key+'_on').checked;
   $('g_'+g.key).classList.toggle('off',!on);
   $(g.key+'_d').disabled = !on;
-  if(g.spacing) $(g.key+'_s').disabled = !on;
-}
+  if(g.spacing) $(g.key+'_s').disabled = !on;}
 function setDefaults(){
   $('object_name').value=''; $('cv').value=25;
   $('concrete_grade').value='C30/37'; $('reinforcement_steel_grade').value='B500B';
   GROUPS.forEach(g=>{
     $(g.key+'_on').checked=true; $(g.key+'_d').value=g.d;
-    if(g.spacing) $(g.key+'_s').value=g.s;
-    syncGroup(g);
+    if(g.spacing) $(g.key+'_s').value=g.s;    syncGroup(g);
   });
 }
 
@@ -184,8 +182,7 @@ function validate(){
       const s=parseFloat($(g.key+'_s').value);
       if(!(s>0)) bad(g.key+'_s','Spacing required.');
       else if(s<SPACING_MIN||s>SPACING_MAX) bad(g.key+'_s',`Must be ${SPACING_MIN}-${SPACING_MAX} mm.`);
-    }
-  });
+    }  });
   if(!enabled){ ok=false; showMsg('Enable at least one reinforcement group.',false); }
   return ok;
 }
@@ -193,8 +190,7 @@ function validate(){
 // Prompt build
 function buildPrompt(){
   const lines = GROUPS.map(g=>groupLine(g,{
-    on:$(g.key+'_on').checked, d:$(g.key+'_d').value, s:g.spacing?parseFloat($(g.key+'_s').value):null
-  }));
+    on:$(g.key+'_on').checked, d:$(g.key+'_d').value, s:g.spacing?parseFloat($(g.key+'_s').value):null  }));
   return fillTemplate(PROMPT_TEMPLATE,{
     Object_name:$('object_name').value.trim(),
     cv:parseFloat($('cv').value),

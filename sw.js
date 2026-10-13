@@ -1,7 +1,7 @@
 // Network-first service worker: online users always get the latest deployed version;
 // the cache is only used when the network is unavailable (offline use).
 // Bump CACHE only if you change the precache list; normal HTML edits need no change.
-const CACHE = 'wall-prompt-v1';
+const CACHE = 'wall-prompt-v2';
 const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', e => {
